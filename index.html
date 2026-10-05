@@ -35,6 +35,12 @@
   <button class="btn multi" onclick="go()">GoldHEN Multi FW</button>
   <br>
 
+  <button class="btn" onclick="go()">10.00</button>
+  <button class="btn" onclick="go()">10.50</button>
+  <button class="btn" onclick="go()">11.00</button>
+  <button class="btn" onclick="go()">11.02</button>
+  <br>
+
   <button class="btn" onclick="go()">13.00</button>
   <button class="btn" onclick="go()">13.02</button>
   <button class="btn" onclick="go()">13.52</button>
@@ -44,12 +50,11 @@
 </div>
 
 <script>
-  /* Todos los botones van a jb.html */
   function go(){
     window.location.href = 'jb.html';
   }
 
-  /* Auto-redirect: si detecta PS4, va directo a jb.html */
+  /* Auto-redirect a jb.html si es PS4 */
   (function(){
     var ua = (navigator.userAgent || '').replace(/\s+/g, ' ');
     var m = ua.match(/PlayStation\s*4[\/\s]([\d.]+)/i);
