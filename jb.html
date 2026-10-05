@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="es" manifest="cache.appcache">
+<html lang="es">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -9,74 +9,64 @@
   html,body{
     min-height:100vh;
     background:#000 url("img.jpg") center/cover fixed;
-    color:#c8ced8;font:15px/1.4 Arial,sans-serif;
+    color:#c8ced8;font:14px/1.4 Arial,sans-serif;
     display:flex;align-items:center;justify-content:center;
-    padding:20px;text-align:center;
+    padding:16px;text-align:center;
   }
   .box{
-    background:rgba(0,0,0,.75);padding:22px;border-radius:8px;
-    max-width:380px;width:100%;
+    background:rgba(0,0,0,.78);padding:20px;border-radius:8px;
+    max-width:420px;width:100%;
   }
-  h1{font-size:20px;color:#fff;margin:0 0 14px;letter-spacing:2px}
-  #fw{font-size:13px;color:#888;margin:0 0 14px}
-  #fw.ok{color:#4ade80}
-  #fw.bad{color:#f87171}
-
-  #jb{
-    display:none;width:100%;padding:14px;border:0;
-    border-radius:6px;font:700 15px Arial;
-    letter-spacing:1px;color:#000;background:#6fcb99;
-    cursor:pointer;font-family:inherit;margin:0 0 10px;
+  h1{font-size:20px;color:#fff;margin:0 0 12px;letter-spacing:3px}
+  #fw{
+    font-size:12px;color:#888;margin:0 0 14px;
+    padding:6px 10px;background:#0a0c10;border:1px solid #333;
+    border-radius:4px;display:inline-block;letter-spacing:1px;
   }
-  #jb:active{background:#5bb889}
-  #jb:disabled{background:#333;color:#666;cursor:default}
-
-  /* Cartelito negro de progreso */
-  #prog{
-    display:none;margin:0 0 10px;
-    background:#0a0c10;border:1px solid #333;border-radius:6px;
-    padding:10px 12px;text-align:left;
-  }
-  #prog.show{display:block}
-  #progTop{
-    display:flex;justify-content:space-between;align-items:center;
-    font:700 11px Arial;letter-spacing:1px;color:#888;
-    margin-bottom:6px;text-transform:uppercase;
-  }
-  #progPct{color:#6fcb99}
-  #progBar{
-    height:4px;background:#1a1a1a;border-radius:999px;
-    overflow:hidden;margin-bottom:8px;
-  }
-  #progFill{
-    height:100%;width:0%;background:#6fcb99;
-    transition:width .3s ease;
-  }
-  #progLog{
-    font:10.5px/1.5 Consolas,monospace;color:#5c6672;
-    max-height:90px;overflow-y:auto;
-    white-space:pre-wrap;word-wrap:break-word;
-  }
-  #progLog .ok{color:#7fd0a0}
-  #progLog .bad{color:#d08a7f}
-  #progLog .warn{color:#d8c07f}
-  #progLog::-webkit-scrollbar{width:4px}
-  #progLog::-webkit-scrollbar-thumb{background:#1e2732;border-radius:2px}
+  #fw.ok{color:#4ade80;border-color:#2a5a3a}
+  #fw.bad{color:#f87171;border-color:#5a2a2a}
 
   #status{
     padding:10px;background:#0a0c10;border:1px solid #333;
     border-radius:6px;font-size:13px;color:#888;
+    margin:0 0 12px;
   }
   #status.ok{color:#4ade80;border-color:#2a5a3a}
   #status.bad{color:#f87171;border-color:#5a2a2a}
   #status.warn{color:#facc15;border-color:#5a4a2a}
 
-  /* Este es el #console que usa misc.js internamente (oculto) */
-  #console{
-    position:absolute;left:-9999px;top:-9999px;
-    width:1px;height:1px;overflow:hidden;opacity:0;
-    pointer-events:none;
+  /* Debug en vivo */
+  #debug{
+    background:#050608;border:1px solid #1a1f28;border-radius:6px;
+    padding:10px 12px;text-align:left;
   }
+  #debugTop{
+    display:flex;justify-content:space-between;align-items:center;
+    font:700 10.5px Arial;letter-spacing:1.5px;
+    color:#666;margin-bottom:8px;text-transform:uppercase;
+  }
+  #debugPct{color:#6fcb99}
+  #debugBar{
+    height:4px;background:#1a1a1a;border-radius:999px;
+    overflow:hidden;margin-bottom:10px;
+  }
+  #debugFill{
+    height:100%;width:0%;background:#6fcb99;
+    transition:width .3s ease;
+  }
+  #debugLog{
+    font:10.5px/1.6 Consolas,monospace;color:#5c6672;
+    height:220px;overflow-y:auto;
+    white-space:pre-wrap;word-wrap:break-word;
+  }
+  #debugLog::-webkit-scrollbar{width:4px}
+  #debugLog::-webkit-scrollbar-thumb{background:#1e2732;border-radius:2px}
+  #debugLog div{margin:0;padding:0}
+  #debugLog .ok{color:#7fd0a0}
+  #debugLog .bad{color:#d08a7f}
+  #debugLog .warn{color:#d8c07f}
+  #debugLog .info{color:#9fb3d0}
+  #debugLog .time{color:#3a4450}
 </style>
 </head>
 <body>
@@ -84,152 +74,194 @@
 <div class="box">
   <h1>Lezl0w</h1>
   <div id="fw">Detectando…</div>
-  <button id="jb" type="button">JAILBREAK</button>
-
-  <!-- Cartelito negro de progreso -->
-  <div id="prog">
-    <div id="progTop">
-      <span>Progreso</span>
-      <span id="progPct">0%</span>
-    </div>
-    <div id="progBar"><div id="progFill"></div></div>
-    <div id="progLog"></div>
-  </div>
-
   <div id="status">Ready</div>
+
+  <div id="debug">
+    <div id="debugTop">
+      <span>Debug</span>
+      <span id="debugPct">0%</span>
+    </div>
+    <div id="debugBar"><div id="debugFill"></div></div>
+    <div id="debugLog"></div>
+  </div>
 </div>
-
-<!-- misc.js escribirá aquí sus logs -->
-<pre id="console"></pre>
-
-<script type="module">
-  import "./jb.js?v=19";
-</script>
 
 <script>
 (function(){
   var fwEl   = document.getElementById('fw'),
-      btn    = document.getElementById('jb'),
       st     = document.getElementById('status'),
-      prog   = document.getElementById('prog'),
-      pct    = document.getElementById('progPct'),
-      fill   = document.getElementById('progFill'),
-      logBox = document.getElementById('progLog'),
-      con    = document.getElementById('console');
+      pct    = document.getElementById('debugPct'),
+      fill   = document.getElementById('debugFill'),
+      logBox = document.getElementById('debugLog');
 
-  var SOPORTADAS = ['10.00','10.50','11.00','11.02','13.00','13.02','13.50','13.52'];
-
-  /* ---------- Detección de firmware ---------- */
-  var ua = (navigator.userAgent||'').replace(/\s+/g,' ');
-  var m  = ua.match(/PlayStation\s*4\s*([\d.]+)/i);
-  var fw = m ? m[1] : null;
-
-  if(!fw){
-    fwEl.textContent = 'No es una PS4';
-    fwEl.className = 'bad';
-    st.textContent = 'Dispositivo no soportado';
-    st.className = 'bad';
-    return;
-  }
-
-  var ok = SOPORTADAS.indexOf(fw) !== -1;
-  fwEl.textContent = 'PS4 ' + fw;
-  fwEl.className = ok ? 'ok' : 'bad';
-
-  if(ok){
-    st.textContent = 'Compatible';
-    st.className = 'ok';
-    btn.style.display = 'block';
-  } else {
-    st.textContent = 'Firmware no soportado';
-    st.className = 'bad';
-  }
-
-  /* ---------- Progreso ---------- */
-  var steps = [
-    { p: 5,   txt: 'Iniciando…',                cls: 'warn' },
-    { p: 12,  txt: 'Cargando misc.js',          cls: '' },
-    { p: 20,  txt: 'Cargando userland',         cls: '' },
-    { p: 30,  txt: 'Inicializando ARW',         cls: '' },
-    { p: 40,  txt: 'Preparando exploit',        cls: '' },
-    { p: 55,  txt: 'Ejecutando Lapse…',         cls: 'warn' },
-    { p: 70,  txt: 'Obteniendo kernel R/W',     cls: 'warn' },
-    { p: 85,  txt: 'Inyectando GoldHEN',        cls: '' },
-    { p: 95,  txt: 'Parcheando kernel',         cls: '' },
-    { p: 100, txt: 'Completado ✓',              cls: 'ok' }
-  ];
-
+  /* ---------- Log con timestamp ---------- */
   function addLog(msg, cls){
-    var line = document.createElement('div');
-    if(cls) line.className = cls;
-    line.textContent = msg;
-    logBox.appendChild(line);
+    var t = new Date();
+    var ts = String(t.getHours()).padStart(2,'0') + ':' +
+             String(t.getMinutes()).padStart(2,'0') + ':' +
+             String(t.getSeconds()).padStart(2,'0');
+    var d = document.createElement('div');
+    d.innerHTML = '<span class="time">[' + ts + ']</span> ' +
+                  '<span class="' + (cls || '') + '">' + msg + '</span>';
+    logBox.appendChild(d);
     logBox.scrollTop = logBox.scrollHeight;
   }
 
-  function setProgress(p, txt, cls){
+  function setProgress(p){
     fill.style.width = p + '%';
     pct.textContent = p + '%';
-    if(txt) addLog('> ' + txt, cls);
   }
 
-  /* ---------- Botón JAILBREAK ---------- */
-  var busy = false;
-  btn.onclick = function(){
-    if(busy) return;
-    busy = true;
-    btn.disabled = true;
-    btn.textContent = 'EJECUTANDO…';
-    st.textContent = 'Ejecutando…';
-    st.className = 'warn';
+  function setStatus(txt, cls){
+    st.textContent = txt;
+    st.className = cls || '';
+  }
 
-    // Mostrar cartelito
-    prog.classList.add('show');
-    logBox.innerHTML = '';
+  /* ---------- Detección de firmware ---------- */
+  var ua = (navigator.userAgent || '').replace(/\s+/g,' ');
+  var m  = ua.match(/PlayStation\s*4[\/\s]([\d.]+)/i);
+  var fw = m ? m[1] : null;
 
-    // Simular progreso
-    steps.forEach(function(s, i){
-      setTimeout(function(){
-        if(!busy) return;
-        setProgress(s.p, s.txt, s.cls);
-      }, i * 600);
-    });
+  addLog('Lezl0w boot v1.0', 'info');
+  setProgress(5);
 
-    // Reflejar logs reales de misc.js
-    setInterval(function(){
-      if(con.textContent.length > 0){
-        // Los logs reales ya se ven reflejados en la consola oculta,
-        // los copiamos al cartelito
-        // (evitamos duplicados comparando longitud)
+  if(!fw){
+    fwEl.textContent = 'No es PS4';
+    fwEl.className = 'bad';
+    setStatus('Dispositivo no soportado', 'bad');
+    addLog('❌ No se detectó PlayStation 4', 'bad');
+    addLog('UA: ' + ua.substring(0, 70), 'time');
+    setProgress(100);
+    return;
+  }
+
+  var parts = fw.split('.');
+  if(parts.length === 2 && parts[1].length === 1){
+    fw = parts[0] + '.' + parts[1] + '0';
+  }
+
+  var SOPORTADAS = ['10.00','10.50','11.00','11.02','13.00','13.02','13.52'];
+  var ok = SOPORTADAS.indexOf(fw) !== -1;
+
+  fwEl.textContent = 'PS4 ' + fw;
+  fwEl.className = ok ? 'ok' : 'bad';
+
+  addLog('Firmware detectado: <b>PS4 ' + fw + '</b>', 'ok');
+  setProgress(15);
+
+  if(!ok){
+    setStatus('Firmware no soportado', 'bad');
+    addLog('❌ Firmware no soportado', 'bad');
+    addLog('Soportados: ' + SOPORTADAS.join(', '), 'warn');
+    setProgress(100);
+    return;
+  }
+
+  addLog('✅ Firmware compatible', 'ok');
+  setStatus('Iniciando exploit…', 'warn');
+  setProgress(25);
+
+  /* ---------- Cargar el exploit real ---------- */
+  addLog('Cargando jb.js…', 'info');
+
+  var s = document.createElement('script');
+  s.type = 'module';
+  s.src = './jb.js?v=' + Date.now();
+
+  s.onload = function(){
+    addLog('✅ jb.js cargado', 'ok');
+    setProgress(40);
+    addLog('Esperando ejecución del exploit…', 'info');
+
+    /* Si jb.js expone doJb() o similar, lo llamamos */
+    setTimeout(function(){
+      try {
+        if(typeof window.doJb === 'function'){
+          addLog('Ejecutando doJb()…', 'warn');
+          setProgress(55);
+          window.doJb();
+        } else if(typeof window.startExploit === 'function'){
+          addLog('Ejecutando startExploit()…', 'warn');
+          setProgress(55);
+          window.startExploit();
+        } else if(typeof window.jb === 'function'){
+          addLog('Ejecutando jb()…', 'warn');
+          setProgress(55);
+          window.jb();
+        } else {
+          addLog('⚠ jb.js cargado (auto-ejecución)', 'warn');
+          setProgress(55);
+        }
+      } catch(e){
+        addLog('❌ Error: ' + e.message, 'bad');
+        setStatus('Error', 'bad');
+        setProgress(100);
       }
-    }, 500);
+    }, 800);
   };
 
-  /* ---------- Reaccionar a body.done / body.fail / body.log ---------- */
-  var obs = new MutationObserver(function(){
-    if(document.body.classList.contains('log')){
-      prog.classList.add('show');
+  s.onerror = function(){
+    addLog('❌ No se pudo cargar jb.js', 'bad');
+    setStatus('Error cargando jb.js', 'bad');
+    setProgress(100);
+  };
+
+  document.head.appendChild(s);
+
+  /* ---------- Reflejar logs reales de misc.js ---------- */
+  /* misc.js escribe en #console (que crea automáticamente).
+     Lo monitorizamos para ver qué pasa en vivo. */
+  var observer = new MutationObserver(function(){
+    var con = document.getElementById('console');
+    if(!con) return;
+
+    /* Solo procesamos las líneas nuevas */
+    var lines = con.textContent.split('\n');
+    for(var i = observer.lastLen || 0; i < lines.length; i++){
+      var line = lines[i].trim();
+      if(!line) continue;
+
+      /* Clasificar por tipo */
+      var cls = 'info';
+      if(line.indexOf('[+]') === 0) cls = 'ok';
+      else if(line.indexOf('[-]') === 0) cls = 'bad';
+      else if(line.indexOf('[*]') === 0) cls = 'info';
+
+      /* Reflejar en el debug */
+      var d = document.createElement('div');
+      var t = new Date();
+      var ts = String(t.getHours()).padStart(2,'0') + ':' +
+               String(t.getMinutes()).padStart(2,'0') + ':' +
+               String(t.getSeconds()).padStart(2,'0');
+      d.innerHTML = '<span class="time">[' + ts + ']</span> ' +
+                    '<span class="' + cls + '">' + line + '</span>';
+      logBox.appendChild(d);
+      logBox.scrollTop = logBox.scrollHeight;
     }
+    observer.lastLen = lines.length;
+  });
+  observer.lastLen = 0;
+  observer.observe(document.body, { childList: true, subtree: true, characterData: true });
+
+  /* ---------- Reaccionar a body.done / body.fail ---------- */
+  var statusObs = new MutationObserver(function(){
     if(document.body.classList.contains('done')){
       fill.style.width = '100%';
       pct.textContent = '100%';
-      addLog('> Completado ✓', 'ok');
-      st.textContent = 'Completado ✓';
-      st.className = 'ok';
-      btn.textContent = 'DONE';
-      busy = false;
+      addLog('✅ Completado', 'ok');
+      setStatus('Completado ✓', 'ok');
     }
     if(document.body.classList.contains('fail')){
-      st.textContent = 'Error';
-      st.className = 'bad';
-      addLog('> Falló — reintentar', 'bad');
-      btn.disabled = false;
-      btn.textContent = 'REINTENTAR';
-      busy = false;
+      fill.style.width = '100%';
+      pct.textContent = '100%';
+      addLog('❌ Falló el exploit', 'bad');
+      setStatus('Error — reinicia la consola', 'bad');
     }
   });
-  obs.observe(document.body,{attributes:true,attributeFilter:['class']});
+  statusObs.observe(document.body, {attributes:true, attributeFilter:['class']});
+
 })();
 </script>
+
 </body>
 </html>
