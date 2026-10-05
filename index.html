@@ -22,105 +22,41 @@
   .multi{background:#2a3a1a;border-color:#5a7a2a}
   .multi:hover{background:#3a4a2a}
   hr{border:0;border-top:1px solid #444;margin:14px auto;max-width:600px}
-  #debug{font-size:11px;color:#888;margin:14px 0 0;
-    padding:10px;background:#0a0c10;border:1px solid #333;
-    border-radius:6px;text-align:left;word-wrap:break-word;
-    font-family:Consolas,monospace;line-height:1.5}
-  #debug b{color:#facc15}
-  #debug .ok{color:#4ade80}
-  #debug .bad{color:#f87171}
 </style>
 </head>
 <body>
 
-<h1 id="msg">Lezl0w — PS4 Exploit Host</h1>
+<h1>Lezl0w — PS4 Exploit Host</h1>
 <hr>
 
 <div id="menu">
   <h1 style="font-size:15px;color:#facc15">Select Your Firmware</h1>
 
-  <button class="btn multi" onclick="go('g2all')">GoldHEN Multi FW</button>
+  <button class="btn multi" onclick="go()">GoldHEN Multi FW</button>
   <br>
 
-  <button class="btn" onclick="go('1300')">13.00</button>
-  <button class="btn" onclick="go('1302')">13.02</button>
-  <button class="btn" onclick="go('1352')">13.52</button>
+  <button class="btn" onclick="go()">13.00</button>
+  <button class="btn" onclick="go()">13.02</button>
+  <button class="btn" onclick="go()">13.52</button>
   <br>
 
-  <button class="btn" onclick="go('restore')">Restore Host</button>
-
-  <div id="debug">Iniciando…</div>
+  <button class="btn" onclick="location.href='restore/index.html'">Restore Host</button>
 </div>
 
 <script>
-  /* Función para botones */
-  function go(path){
-    window.location.href = path + '/index.html';
+  /* Todos los botones van a jb.html */
+  function go(){
+    window.location.href = 'jb.html';
   }
 
-  /* Auto-detección y redirección */
-  function autoDetect(){
-    var dbg = document.getElementById('debug');
-    var log = function(msg, cls){
-      var line = document.createElement('div');
-      if(cls) line.className = cls;
-      line.innerHTML = msg;
-      dbg.appendChild(line);
-    };
-
-    try {
-      // 1) Leer User-Agent
-      var ua = navigator.userAgent || '';
-      log('<b>UA:</b> ' + ua.substring(0, 80));
-
-      // 2) Normalizar espacios
-      var uaClean = ua.replace(/\s+/g, ' ');
-      log('<b>UA normalizado:</b> ' + uaClean.substring(0, 80));
-
-      // 3) Regex flexible: acepta "PlayStation 4 13.02" o "PlayStation 4/13.02"
-      var m = uaClean.match(/PlayStation\s*4[\/\s]([\d.]+)/i);
-      if(!m){
-        log('❌ No se detectó PS4 en el UA', 'bad');
-        return;
-      }
-
-      var fw = m[1];
-      log('<b>Firmware detectado:</b> ' + fw);
-
-      // 4) Normalizar firmware: "13.0" → "13.00", "13.5" → "13.50"
-      var parts = fw.split('.');
-      if(parts.length === 2 && parts[1].length === 1){
-        fw = parts[0] + '.' + parts[1] + '0';
-        log('<b>Firmware normalizado:</b> ' + fw);
-      }
-
-      // 5) Mapa de redirección (solo 13.xx)
-      var map = {
-        '13.00': '1300',
-        '13.02': '1302',
-        '13.52': '1352'
-      };
-
-      if(map[fw]){
-        log('✅ Redirigiendo a <b>' + map[fw] + '/index.html</b>', 'ok');
-        setTimeout(function(){
-          window.location.href = map[fw] + '/index.html';
-        }, 1500); // 1.5s para que puedas leer el debug
-      } else {
-        log('❌ Firmware no soportado: ' + fw, 'bad');
-        log('Disponibles: ' + Object.keys(map).join(', '), 'bad');
-      }
-    } catch(e){
-      log('❌ Error: ' + e.message, 'bad');
+  /* Auto-redirect: si detecta PS4, va directo a jb.html */
+  (function(){
+    var ua = (navigator.userAgent || '').replace(/\s+/g, ' ');
+    var m = ua.match(/PlayStation\s*4[\/\s]([\d.]+)/i);
+    if(m){
+      window.location.href = 'jb.html';
     }
-  }
-
-  // Ejecutar cuando el DOM esté listo (más seguro en PS4)
-  if(document.readyState === 'loading'){
-    document.addEventListener('DOMContentLoaded', autoDetect);
-  } else {
-    autoDetect();
-  }
+  })();
 </script>
 
 </body>
