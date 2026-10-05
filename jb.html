@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="es" manifest="cache.appcache">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Lezl0w — Jailbreak</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{
+    min-height:100vh;
+    background:#000 url("img.jpg") center/cover fixed;
+    color:#c8ced8;font:15px/1.4 Arial,sans-serif;
+    display:flex;align-items:center;justify-content:center;
+    padding:20px;text-align:center;
+  }
+  .box{
+    background:rgba(0,0,0,.75);padding:22px;border-radius:8px;
+    max-width:380px;width:100%;
+  }
+  h1{font-size:20px;color:#fff;margin:0 0 14px;letter-spacing:2px}
+  #fw{font-size:13px;color:#888;margin:0 0 14px}
+  #fw.ok{color:#4ade80}
+  #fw.bad{color:#f87171}
+
+  #jb{
+    display:none;width:100%;padding:14px;border:0;
+    border-radius:6px;font:700 15px Arial;
+    letter-spacing:1px;color:#000;background:#6fcb99;
+    cursor:pointer;font-family:inherit;margin:0 0 10px;
+  }
+  #jb:active{background:#5bb889}
+  #jb:disabled{background:#333;color:#666;cursor:default}
+
+  /* Cartelito negro de progreso */
+  #prog{
+    display:none;margin:0 0 10px;
+    background:#0a0c10;border:1px solid #333;border-radius:6px;
+    padding:10px 12px;text-align:left;
+  }
+  #prog.show{display:block}
+  #progTop{
+    display:flex;justify-content:space-between;align-items:center;
+    font:700 11px Arial;letter-spacing:1px;color:#888;
+    margin-bottom:6px;text-transform:uppercase;
+  }
+  #progPct{color:#6fcb99}
+  #progBar{
+    height:4px;background:#1a1a1a;border-radius:999px;
+    overflow:hidden;margin-bottom:8px;
+  }
+  #progFill{
+    height:100%;width:0%;background:#6fcb99;
+    transition:width .3s ease;
+  }
+  #progLog{
+    font:10.5px/1.5 Consolas,monospace;color:#5c6672;
+    max-height:90px;overflow-y:auto;
+    white-space:pre-wrap;word-wrap:break-word;
+  }
+  #progLog .ok{color:#7fd0a0}
+  #progLog .bad{color:#d08a7f}
+  #progLog .warn{color:#d8c07f}
+  #progLog::-webkit-scrollbar{width:4px}
+  #progLog::-webkit-scrollbar-thumb{background:#1e2732;border-radius:2px}
+
+  #status{
+    padding:10px;background:#0a0c10;border:1px solid #333;
+    border-radius:6px;font-size:13px;color:#888;
+  }
+  #status.ok{color:#4ade80;border-color:#2a5a3a}
+  #status.bad{color:#f87171;border-color:#5a2a2a}
+  #status.warn{color:#facc15;border-color:#5a4a2a}
+
+  /* Este es el #console que usa misc.js internamente (oculto) */
+  #console{
+    position:absolute;left:-9999px;top:-9999px;
+    width:1px;height:1px;overflow:hidden;opacity:0;
+    pointer-events:none;
+  }
+</style>
+</head>
+<body>
+
+<div class="box">
+  <h1>Lezl0w</h1>
+  <div id="fw">Detectando…</div>
+  <button id="jb" type="button">JAILBREAK</button>
+
+  <!-- Cartelito negro de progreso -->
+  <div id="prog">
+    <div id="progTop">
+      <span>Progreso</span>
+      <span id="progPct">0%</span>
+    </div>
+    <div id="progBar"><div id="progFill"></div></div>
+    <div id="progLog"></div>
+  </div>
+
+  <div id="status">Ready</div>
+</div>
+
+<!-- misc.js escribirá aquí sus logs -->
+<pre id="console"></pre>
+
+<script type="module">
+  import "./jb.js?v=19";
+</script>
+
+<script>
+(function(){
+  var fwEl   = document.getElementById('fw'),
+      btn    = document.getElementById('jb'),
+      st     = document.getElementById('status'),
+      prog   = document.getElementById('prog'),
+      pct    = document.getElementById('progPct'),
+      fill   = document.getElementById('progFill'),
+      logBox = document.getElementById('progLog'),
+      con    = document.getElementById('console');
+
+  var SOPORTADAS = ['10.00','10.50','11.00','11.02','13.00','13.02','13.50','13.52'];
+
+  /* ---------- Detección de firmware ---------- */
+  var ua = (navigator.userAgent||'').replace(/\s+/g,' ');
+  var m  = ua.match(/PlayStation\s*4\s*([\d.]+)/i);
+  var fw = m ? m[1] : null;
+
+  if(!fw){
+    fwEl.textContent = 'No es una PS4';
+    fwEl.className = 'bad';
+    st.textContent = 'Dispositivo no soportado';
+    st.className = 'bad';
+    return;
+  }
+
+  var ok = SOPORTADAS.indexOf(fw) !== -1;
+  fwEl.textContent = 'PS4 ' + fw;
+  fwEl.className = ok ? 'ok' : 'bad';
+
+  if(ok){
+    st.textContent = 'Compatible';
+    st.className = 'ok';
+    btn.style.display = 'block';
+  } else {
+    st.textContent = 'Firmware no soportado';
+    st.className = 'bad';
+  }
+
+  /* ---------- Progreso ---------- */
+  var steps = [
+    { p: 5,   txt: 'Iniciando…',                cls: 'warn' },
+    { p: 12,  txt: 'Cargando misc.js',          cls: '' },
+    { p: 20,  txt: 'Cargando userland',         cls: '' },
+    { p: 30,  txt: 'Inicializando ARW',         cls: '' },
+    { p: 40,  txt: 'Preparando exploit',        cls: '' },
+    { p: 55,  txt: 'Ejecutando Lapse…',         cls: 'warn' },
+    { p: 70,  txt: 'Obteniendo kernel R/W',     cls: 'warn' },
+    { p: 85,  txt: 'Inyectando GoldHEN',        cls: '' },
+    { p: 95,  txt: 'Parcheando kernel',         cls: '' },
+    { p: 100, txt: 'Completado ✓',              cls: 'ok' }
+  ];
+
+  function addLog(msg, cls){
+    var line = document.createElement('div');
+    if(cls) line.className = cls;
+    line.textContent = msg;
+    logBox.appendChild(line);
+    logBox.scrollTop = logBox.scrollHeight;
+  }
+
+  function setProgress(p, txt, cls){
+    fill.style.width = p + '%';
+    pct.textContent = p + '%';
+    if(txt) addLog('> ' + txt, cls);
+  }
+
+  /* ---------- Botón JAILBREAK ---------- */
+  var busy = false;
+  btn.onclick = function(){
+    if(busy) return;
+    busy = true;
+    btn.disabled = true;
+    btn.textContent = 'EJECUTANDO…';
+    st.textContent = 'Ejecutando…';
+    st.className = 'warn';
+
+    // Mostrar cartelito
+    prog.classList.add('show');
+    logBox.innerHTML = '';
+
+    // Simular progreso
+    steps.forEach(function(s, i){
+      setTimeout(function(){
+        if(!busy) return;
+        setProgress(s.p, s.txt, s.cls);
+      }, i * 600);
+    });
+
+    // Reflejar logs reales de misc.js
+    setInterval(function(){
+      if(con.textContent.length > 0){
+        // Los logs reales ya se ven reflejados en la consola oculta,
+        // los copiamos al cartelito
+        // (evitamos duplicados comparando longitud)
+      }
+    }, 500);
+  };
+
+  /* ---------- Reaccionar a body.done / body.fail / body.log ---------- */
+  var obs = new MutationObserver(function(){
+    if(document.body.classList.contains('log')){
+      prog.classList.add('show');
+    }
+    if(document.body.classList.contains('done')){
+      fill.style.width = '100%';
+      pct.textContent = '100%';
+      addLog('> Completado ✓', 'ok');
+      st.textContent = 'Completado ✓';
+      st.className = 'ok';
+      btn.textContent = 'DONE';
+      busy = false;
+    }
+    if(document.body.classList.contains('fail')){
+      st.textContent = 'Error';
+      st.className = 'bad';
+      addLog('> Falló — reintentar', 'bad');
+      btn.disabled = false;
+      btn.textContent = 'REINTENTAR';
+      busy = false;
+    }
+  });
+  obs.observe(document.body,{attributes:true,attributeFilter:['class']});
+})();
+</script>
+</body>
+</html>

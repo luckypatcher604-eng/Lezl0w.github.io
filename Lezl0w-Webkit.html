@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="es" manifest="cache.appcache">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Lezl0w</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{
+    background:#000 url("img.jpg") center/cover fixed;
+    color:#fff;font:15px/1.4 Arial,sans-serif;
+    min-height:100vh;padding:20px;text-align:center;
+  }
+  #menu{max-width:600px;margin:0 auto;background:rgba(0,0,0,.6);
+    padding:20px;border-radius:8px}
+  h1{font-size:20px;margin:8px 0 14px;color:#fff}
+  .btn{display:inline-block;padding:11px 18px;margin:5px;
+    font:700 14px Arial;color:#fff;background:#1a1a1a;
+    border:1px solid #555;border-radius:4px;cursor:pointer;font-family:inherit}
+  .btn:hover{background:#2a2a2a}
+  .btn:active{background:#333}
+  .multi{background:#2a3a1a;border-color:#5a7a2a}
+  .multi:hover{background:#3a4a2a}
+  hr{border:0;border-top:1px solid #444;margin:14px auto;max-width:600px}
+</style>
+</head>
+<body>
+
+<h1 id="msg">Lezl0w — PS4 Exploit Host</h1>
+<hr>
+
+<div id="menu">
+  <h1 style="font-size:15px;color:#facc15">Select Your Firmware</h1>
+
+  <button class="btn multi" onclick="go('g2all')">GoldHEN Multi FW</button>
+  <br>
+
+  <button class="btn" onclick="go('1000')">10.00</button>
+  <button class="btn" onclick="go('1050')">10.50</button>
+  <button class="btn" onclick="go('1100')">11.00</button>
+  <button class="btn" onclick="go('1102')">11.02</button>
+  <br>
+
+  <button class="btn" onclick="go('1300')">13.00</button>
+  <button class="btn" onclick="go('1302')">13.02</button>
+  <button class="btn" onclick="go('1352')">13.52</button>
+  <br>
+
+  <button class="btn" onclick="go('restore')">Restore Host</button>
+</div>
+
+<script>
+  function go(path){ location.replace(path + '/index.html'); }
+
+  // Auto-redirect: si el firmware ya es compatible, salta directo
+  (function(){
+    var ua=(navigator.userAgent||'').replace(/\s+/g,' ');
+    var m=ua.match(/PlayStation\s*4\s*([\d.]+)/i);
+    if(!m) return;
+    var fw=m[1];
+    var map={'10.00':'1000','10.50':'1050','11.00':'1100','11.02':'1102',
+             '13.00':'1300','13.02':'1302','13.52':'1352'};
+    if(map[fw]) location.replace(map[fw] + '/index.html');
+  })();
+</script>
+
+</body>
+</html>
